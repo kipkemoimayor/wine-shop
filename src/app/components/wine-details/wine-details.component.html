@@ -1,0 +1,35 @@
+<div class="col-md-12">
+  <div class="container custom-wine-container">
+
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <div class="navigate-back">
+        </div>
+        <div class="card">
+          <div class="card-header">{{wine?.name}}</div>
+          <div class="card-body">
+            <img src="{{imageBaseUrl}}{{wine?.image}}" class="img-thumbnail rounded float-left wine-img" alt="">
+
+            <!-- wine details -->
+            <div class="wine-details">
+              <p class="font-weight-bold">Description</p>
+              <p class="text-muted">{{wine?.details}}</p>
+
+              <p class="font-weight-bold">Prices</p>
+              <p class="text-muted"><strong>Bottle</strong>: Ksh {{wine?.cost.bottle |number}} <strong>Case</strong>: Ksh
+                {{wine?.cost.case|number}}</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-secondary" (click)='navigateBack()'>Go back</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-3"></div>
+    </div>
+  </div>
+</div>
+
+<br>

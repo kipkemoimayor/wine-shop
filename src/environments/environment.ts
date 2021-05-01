@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiUrl: 'https://storage.googleapis.com/wineshop-assets/wine-shop.json',
+  imageBaseUrl: 'https://storage.googleapis.com/wineshop-assets/wine-bottles/'
 };
 
 /*

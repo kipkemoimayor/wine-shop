@@ -1,0 +1,242 @@
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="filter-container">
+        <div class="filters">
+          <div class="lables">
+            <span [class.selected]='showMeSelected' (click)='showMeSelected=true;selected=false' id="show-me-label">Show
+              me</span>
+            <span [class.selected]='selected' (click)='showAllWines()' class="show-all">Show
+              all</span>
+          </div>
+          <div class="filter">
+            <div class="filter-content">
+              <p class="filter-data" [class.activefilter]='selectedIndex==i' (click)='filterWines(filter,i)'
+                *ngFor='let filter of filters;let i = index'>{{filter}}</p>
+            </div>
+
+            <div class="order-filter">
+              <p class="order-filter-data-status">Order by</p>
+              <p (click)='sortWines({price:true})' class="order-filter-data">Price</p>
+              <p (click)='sortWines({price:false})' class="order-filter-data">Vintage</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <!-- selected items details -->
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card">
+              <div class="user-details">
+                <p class="text-muted text-bold">Delivery Info</p>
+                <div *ngIf='deliveryInfoForm.name && deliveryInfoForm.notes' class="details">
+                  <p class="text-muted">Name: {{deliveryInfoForm.name}}</p>
+                  <p class="text-muted">Estate: {{deliveryInfoForm.estate}}</p>
+                  <address>
+                    <p class="text-muted">Address: {{deliveryInfoForm.address}}</p>
+                    <p class="text-muted">Delivery Notes: {{deliveryInfoForm.notes}}</p>
+                  </address>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card">
+              <div class="quatity-count">
+                <div class="count">
+                  <p class="bold-text text-muted b-count"> {{totals.botles?totals.botles:0}}</p>
+                  <p class="bold-text text-muted">Bottles</p>
+
+                  <p class="bold-text text-muted b-count"> {{totals.cases}}</p>
+                  <p class="bold-text text-muted">Cases</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 desktop-view">
+            <div class="card">
+              <div *ngFor='let item of cartItems' class="cart">
+                <div class="items item-name text-muted">
+                  {{item.botles && item.cases? item.botles +'(B)' + item.cases +'(C)':item.botles? item.botles +'(B)':item.cases?item.cases +'(C)':"" }}
+                  x {{item.name | slice:0:20}}
+                </div>
+                <button (click)='removeItemFromCart(item)' class="btn btn-secondary btn-sm">Empty cart</button>
+              </div>
+              <hr class="divider">
+              <div class="chekout">
+                <div class="items item-total text-muted">Ksh {{totals.totalPrice | number}}</div>
+                <button [disabled]='!cartItems.length' data-toggle="modal" data-target="#delDetails"
+                  class="btn btn-dark btn-sm">Checkout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <hr class="divider">
+      <!-- Modal -->
+      <div class="modal fade" id="delDetails" tabindex="-1" role="dialog" aria-labelledby="delDetailsLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="delDetailsLabel">Delivery Info</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form">
+                <form #form='ngForm' novalidate class="form-group">
+                  <div class="form-group">
+                    <label for="name">Full Names</label>
+                    <input required [(ngModel)]='deliveryInfoForm.name' name="name" class="form-control" id="name"
+                      type="text">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="estate">Estate</label>
+                    <input required [(ngModel)]='deliveryInfoForm.estate' name="estate" class="form-control" id="estate"
+                      type="text">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="address">Address</label>
+                    <input required [(ngModel)]='deliveryInfoForm.address' name="address" class="form-control"
+                      id="address" type="text">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="notes">Delivery Notes</label>
+                    <textarea required [(ngModel)]='deliveryInfoForm.notes' name="notes" class="form-control" id="noted"
+                      cols="30" rows="5"></textarea>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="button" [disabled]='!form.valid' class="btn btn-primary" data-dismiss="modal">Confirm
+                Checkout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loader display -->
+  <div *ngIf='fetchingWines' style="margin: 3em;" class="row">
+    <div class="col-md-4" *ngFor='let i of loader'>
+      <app-loader></app-loader>
+    </div>
+  </div>
+
+
+  <!-- Error display -->
+  <div *ngIf='errorFetchingWines' style="margin: 3em;" class="row">
+    <div class="col-md-6" *ngFor='let i of loader'>
+      <div class="alert alert-danger text-center">
+        An error occured please try again <button (click)='reload()' class="alert alert-primary">Reload</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+  <!-- list -->
+  <div [hidden]='showWineDetails' class="row custom-row">
+    <div class="container wine-list">
+      <div class="row">
+        <div *ngFor='let wine of wines; let i=index' class="col-md-4 custom-col">
+          <div class="card h-100 custom-card">
+            <div class="card-body">
+              <div class="div">
+                <img src="{{imageBaseUrl}}{{wine.image}}" class="img-thumbnail rounded float-left wine-img" alt="">
+
+                <div class="details">
+                  <div class="header">
+                    <div class="name">
+                      <p class="text-muted">{{wine.name | slice:0:20}}</p>
+                    </div>
+                  </div>
+
+                  <div class="purchase h-100">
+                    <div class="bottle">
+                      <p>Bottle</p>
+                      <p>Ksh {{wine.cost.bottle | number}}</p>
+                      <div class="inputs">
+                        <input class="input" [(ngModel)]='wine.bottleQty' name="{{i}}+bottle" type="text" value="">
+                        <span>QTY</span>
+                      </div>
+                    </div>
+                    <div class="separator"></div>
+                    <div class="case">
+                      <p>Case</p>
+                      <p>Ksh {{wine.cost.case | number}}</p>
+                      <div class="inputs">
+                        <input class="input" [(ngModel)]="wine.caseQty" name="{{i}}+case" type="text" value="">
+                        <span>QTY</span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="btns">
+                  <button (click)='viewDetails(wine)' class="text-muted">Details</button>
+                  <button (click)='addToCart(wine)' class="text-muted">Add to cart</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <br> <br>
+      <div class="mobile-div"></div>
+    </div>
+
+    <div *ngIf='cartItems.length' class="container col-md-12 mobile-cart">
+      <div class="row row-fixed">
+        <div class="col-md-12 mobile-cart-items">
+          <div class="card">
+
+            <div class="chekout">
+              <div class="items item-total text-muted">Ksh {{totals.totalPrice | number}}</div>
+              <button [disabled]='!cartItems.length' data-toggle="modal" data-target="#delDetails"
+                class="btn btn-dark btn-sm">Checkout</button>
+            </div>
+            <div *ngFor='let item of cartItems' class="cart">
+              <div class="items item-name text-muted">
+                {{item.botles && item.cases? item.botles +'(B)' + item.cases +'(C)':item.botles? item.botles +'(B)':item.cases?item.cases +'(C)':"" }}
+                x {{item.name | slice:0:20}}
+              </div>
+              <button (click)='removeItemFromCart(item)' class="btn btn-secondary btn-sm">Empty cart</button>
+            </div>
+            <hr class="divider">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div class="row" *ngIf='showWineDetails'>
+    <app-wine-details (back)='hideWineDetails($event)' [wine]='wineDetails'></app-wine-details>
+  </div>
+</div>
