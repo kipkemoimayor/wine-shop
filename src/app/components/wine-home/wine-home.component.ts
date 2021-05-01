@@ -127,7 +127,7 @@ export class WineHomeComponent implements OnInit {
   }
 
 
-  hideWineDetails(): void {
+  hideWineDetails(event): void {
     this.showWineDetails = !this.showWineDetails;
   }
 
