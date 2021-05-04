@@ -141,7 +141,7 @@ export class WineHomeComponent implements OnInit {
 
 
     if (wine.caseQty) {
-      if (!reg.test(wine.caseQty)) {        
+      if (!reg.test(wine.caseQty)) {
         alert('Only numbers allowed as quantity')
         return;
       }
@@ -171,8 +171,8 @@ export class WineHomeComponent implements OnInit {
     //add to cart array
     let cartWine = {
       name: wine.name,
-      botles: wine.bottleQty,
-      cases: wine.caseQty,
+      botles: wine.bottleQty || 0,
+      cases: wine.caseQty || 0,
       total: wineCaseTotal + wineTotal,
     };
 
@@ -189,9 +189,19 @@ export class WineHomeComponent implements OnInit {
 
   computeWineTotal(cartItems: any[]): any {
     return cartItems.reduce((prev, curr) => {
+      console.log(curr);
+      
       prev.totalPrice += curr.total;
-      prev.botles += curr.botles;
-      prev.cases += curr.cases;
+      if (typeof prev.botles == 'number') {
+        prev.botles += curr.botles;
+      } else {
+        prev.botles += 0;
+      }
+      if (typeof prev.cases == 'number') {
+        prev.cases += curr.cases;
+      } else {
+        prev.cases += 0;
+      }
       return prev;
     }, { totalPrice: 0, botles: 0, cases: 0 })
   }
